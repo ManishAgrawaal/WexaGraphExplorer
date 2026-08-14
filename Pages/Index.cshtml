@@ -1,0 +1,109 @@
+@page
+@model GraphExplorer.Pages.IndexModel
+@{
+    var hasResults = Model.SearchResults.Count > 0;
+}
+<section class="hero">
+    <div>
+        <p class="eyebrow">GRAPH EXPLORER</p>
+        <h1>Find the people behind the connections.</h1>
+        <p class="subtitle">Search people by name, role or skill, then discover high-value connections through shared skills and projects.</p>
+    </div>
+    <div class="hero-card">
+        <span class="hero-number">@Model.Stats.People</span>
+        <span>people in the demo graph</span>
+    </div>
+</section>
+
+<section class="stats">
+    <div><strong>@Model.Stats.People</strong><span>People</span></div>
+    <div><strong>@Model.Stats.Skills</strong><span>Skills</span></div>
+    <div><strong>@Model.Stats.Companies</strong><span>Companies</span></div>
+    <div><strong>@Model.Stats.Projects</strong><span>Projects</span></div>
+    <div><strong>@Model.Stats.Relationships</strong><span>Relationships</span></div>
+</section>
+
+@if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
+{
+    <div class="alert">@Model.ErrorMessage</div>
+}
+
+<section class="panel">
+    <form method="post" asp-page-handler="Search" class="search-row">
+        <input name="SearchTerm" value="@Model.SearchTerm" placeholder="Try: Azure, Angular, architect, Aarav..." aria-label="Search graph" />
+        <button type="submit">Search graph</button>
+    </form>
+    <p class="hint">Tip: search a skill to see people connected to it.</p>
+</section>
+
+@if (hasResults)
+{
+<section>
+    <div class="section-title">
+        <div><p class="eyebrow">SEARCH RESULTS</p><h2>People you can explore</h2></div>
+        <span class="count">@Model.SearchResults.Count results</span>
+    </div>
+    <div class="cards">
+        @foreach (var person in Model.SearchResults)
+        {
+            <article class="person-card">
+                <div class="avatar">@person.Name[0]</div>
+                <div class="person-main">
+                    <h3>@person.Name</h3>
+                    <p>@person.Role · @person.Company</p>
+                    <small>@person.Location</small>
+                    <div class="chips">
+                        @foreach (var skill in person.Skills.Take(5))
+                        {
+                            <span>@skill</span>
+                        }
+                    </div>
+                    <form method="post" asp-page-handler="Recommendations">
+                        <input type="hidden" name="PersonId" value="@person.Id" />
+                        <button class="link-button" type="submit">Explore connections →</button>
+                    </form>
+                </div>
+            </article>
+        }
+    </div>
+</section>
+}
+
+@if (Model.SelectedPerson is not null)
+{
+<section class="panel recommendation-panel">
+    <div class="section-title">
+        <div><p class="eyebrow">MULTI-HOP DISCOVERY</p><h2>People connected to @Model.SelectedPerson.Name</h2></div>
+    </div>
+    <p class="explain">The graph follows <b>Person → Skill ← Person</b> and scores connections using shared skills plus shared projects.</p>
+    @if (Model.Recommendations.Count == 0)
+    {
+        <div class="empty">No connected people were found for this person.</div>
+    }
+    else
+    {
+        <div class="cards">
+        @foreach (var rec in Model.Recommendations)
+        {
+            <article class="recommendation-card">
+                <div class="score">@rec.ConnectionScore</div>
+                <div>
+                    <h3>@rec.Name</h3>
+                    <p>@rec.Role · @rec.Company</p>
+                    <div class="relation"><b>Shared skills:</b> @(rec.SharedSkills.Count == 0 ? "None" : string.Join(", ", rec.SharedSkills))</div>
+                    <div class="relation"><b>Shared projects:</b> @(rec.SharedProjects.Count == 0 ? "None" : string.Join(", ", rec.SharedProjects))</div>
+                </div>
+            </article>
+        }
+        </div>
+    }
+</section>
+}
+
+<section class="why">
+    <div>
+        <p class="eyebrow">WHY GRAPH?</p>
+        <h2>Relationships are the product.</h2>
+    </div>
+    <p>Finding “people two hops away through shared skills and projects” is a natural graph traversal. The same question in a relational model needs several joins, intermediate tables and more application-side stitching. Here the relationships are first-class data.</p>
+</section>

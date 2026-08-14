@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="SeedProgram.cs" />
+    <Compile Include="Data\SeedData.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Neo4j.Driver" Version="5.28.1" />
+  </ItemGroup>
+
+</Project>
