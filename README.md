@@ -1,4 +1,4 @@
-﻿# GraphLens — Wexa AI CognoDB Take-Home
+# GraphLens — Wexa AI CognoDB Take-Home
 
 GraphLens is a small relationship-exploration web application built for the Wexa AI take-home assignment.
 
@@ -12,7 +12,7 @@ It uses **ASP.NET Core Razor Pages + C# + the official Neo4j .NET driver + Cogno
 
 A recruiter, engineering manager or delivery lead wants to discover people who are relevant to a person based on shared technical skills and shared project experience.
 
-Example question:
+Example question::
 
 > "Who is connected to Aarav through shared skills, and who has also worked on the same projects?"
 
