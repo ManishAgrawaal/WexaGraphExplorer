@@ -16,7 +16,7 @@ Example question::
 
 > "Who is connected to Aarav through shared skills, and who has also worked on the same projects?"
 
-GraphLens allows a user to search people by:
+GraphLens allows a user to search people by::
 
 - Name
 - Role
