@@ -4,16 +4,17 @@ using Neo4j.Driver;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddRazorPages();
+var uri = Environment.GetEnvironmentVariable("COGNODB_URI")
+    ?? builder.Configuration["CognoDb:Uri"]
+    ?? throw new InvalidOperationException("COGNODB_URI is missing.");
 
-var uri = builder.Configuration["CognoDb:Uri"]
-    ?? Environment.GetEnvironmentVariable("COGNODB_URI")
-    ?? throw new InvalidOperationException("CognoDb:Uri / COGNODB_URI is missing.");
-var username = builder.Configuration["CognoDb:Username"]
-    ?? Environment.GetEnvironmentVariable("COGNODB_USERNAME")
+var username = Environment.GetEnvironmentVariable("COGNODB_USERNAME")
+    ?? builder.Configuration["CognoDb:Username"]
     ?? "cognodb";
-var password = builder.Configuration["CognoDb:Password"]
-    ?? Environment.GetEnvironmentVariable("COGNODB_PASSWORD")
-    ?? throw new InvalidOperationException("CognoDb:Password / COGNODB_PASSWORD is missing.");
+
+var password = Environment.GetEnvironmentVariable("COGNODB_PASSWORD")
+    ?? builder.Configuration["CognoDb:Password"]
+    ?? throw new InvalidOperationException("COGNODB_PASSWORD is missing.");
 
 builder.Services.AddSingleton<IDriver>(_ =>
     GraphDatabase.Driver(uri, AuthTokens.Basic(username, password)));
